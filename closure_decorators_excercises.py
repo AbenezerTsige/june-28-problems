@@ -4,6 +4,14 @@
 #Using a closure, create a function, multiples_of(n) which we can use to
 #create generators that generate multiples of n less than a given number.
 
+def multiples_of(n):
+    # Nested function
+    def multiply(k):
+        # access nonlocal variable form the enclosing funciton 
+        yield n
+        return n * k
+    return multiply # Returns the nested fucntion 
+    
 m3 = multiples_of(3)
 m3_under30 = m3(30)
 m7_under30 = multiples_of(7)(30)
@@ -22,9 +30,15 @@ print(*m7_under30)
 #@make_upper – make every letter of a string returned from the decorated
 #function uppercase.
 
+def decorator(orginal):
+    def wrapper():
+        return orginal()
+    return wrapper
+
 def hello_world():
     return 'hello young, good day!!'
 
+decorated_test = decorator(hello_world)
 print(hello_world()) # output: HELLO YOUNG, GOOD DAY!!
 #-----------------------------------------------------------------------
 
@@ -32,9 +46,16 @@ print(hello_world()) # output: HELLO YOUNG, GOOD DAY!!
 #@print_func_name – print the name of the decorated function before
 #executing the function.
 
+def print_func_name(func):
+    def wrapper():
+        print(my_func)
+        func()
+    return wrapper 
+    
 def my_func():
     print('Python is fun!!')
 
+my_func = print_func_name(my_func)
 my_func() # output: my_func is running...
             #Python is fun
 #----------------------------------------------------------------------
@@ -42,9 +63,16 @@ my_func() # output: my_func is running...
 #Decoratos Excercise 3
 #@give_name(name) – concatenate the given name at the end of a string
 #returned from the decorated function.
+def my_dec(func):
+    def wrapper():
+        func()
+        return func() + " Theresa"
+    return wrapper
+    
 def greeting():
     return 'Hello'
 
+greeting = my_dec(greeting)
 print(greeting()) # output: Hello Theresa
 #---------------------------------------------------------------------
 
@@ -52,9 +80,16 @@ print(greeting()) # output: Hello Theresa
 #@print_input_type – print a data type of the input argument before
 #executing the decorated function.
 
+def my_dec(func):
+    def wrapper(func):
+        return func ** 2
+    return wrapper
+
 def square(n):
     return n ** 2
 
+square = my_dec(square)
+print(type(square(3.5)))
 print(square(3.5)) # output: The input data type is <class 'float'>
                     #12.25
 #-------------------------------------------------------------------
