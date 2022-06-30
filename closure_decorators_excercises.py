@@ -5,11 +5,13 @@
 #create generators that generate multiples of n less than a given number.
 
 def multiples_of(n):
-    # Nested function
-    def multiply(k):
+    num = []
+    def multiply(k):  # Nested function
         # access nonlocal variable form the enclosing funciton 
-        yield n
-        return n * k
+        for i in range (1,k):
+            if i%n==0:
+                num.append(i)
+        yield str(num)
     return multiply # Returns the nested fucntion 
     
 m3 = multiples_of(3)
@@ -30,16 +32,17 @@ print(*m7_under30)
 #@make_upper – make every letter of a string returned from the decorated
 #function uppercase.
 
-def decorator(orginal):
-    def wrapper():
-        return orginal()
-    return wrapper
-
 def hello_world():
     return 'hello young, good day!!'
 
-decorated_test = decorator(hello_world)
+def upper_decorater(orginal):
+    def wrapper(*args, **kwargs):
+        print(orginal(*args, **kwargs).upper())
+    return wrapper
+
 print(hello_world()) # output: HELLO YOUNG, GOOD DAY!!
+made_upper = upper_decorater(hello_world)
+made_upper()
 #-----------------------------------------------------------------------
 
 #Decorators Excercise 2
@@ -48,7 +51,7 @@ print(hello_world()) # output: HELLO YOUNG, GOOD DAY!!
 
 def print_func_name(func):
     def wrapper():
-        print(my_func)
+        print("my_func is running...")
         func()
     return wrapper 
     
@@ -64,16 +67,15 @@ my_func() # output: my_func is running...
 #@give_name(name) – concatenate the given name at the end of a string
 #returned from the decorated function.
 def my_dec(func):
-    def wrapper():
-        func()
-        return func() + " Theresa"
+    def wrapper(name):
+        print(func(), name)
     return wrapper
     
 def greeting():
     return 'Hello'
 
 greeting = my_dec(greeting)
-print(greeting()) # output: Hello Theresa
+greeting("Theresa") # output: Hello Theresa
 #---------------------------------------------------------------------
 
 #Decorators Excercise 4
@@ -116,7 +118,14 @@ print(square(2.9)) # output: The return type is <class 'float'>
 #------------------------------------------------------------------------
 
 #Decorators Excercise 6
-#@execute_log – write a function execution log on the log file. (log below)
+#@execute_log – write a function executing log on the log file. (log below)
+from datetime import datetime
+#print(datetime.now())
+
+def execute_log(func):
+    def inner():
+        print(datetime.now(), func.__name__)
+    return inner 
 
 def multiply(*nums):
     mult = 1
@@ -131,6 +140,15 @@ print(multiply(6, 2, 3)) # 36
 print(hello_world()) # hello world!!
 print(multiply(2.2, 4)) # 8.8
 print(hello_world()) # hello world!!
+
+function_execution = execute_log(multiply)
+function_execution()
+function_execution = execute_log(hello_world)
+function_execution()
+function_execution = execute_log(multiply)
+function_execution()
+function_execution = execute_log(hello_world)
+function_execution()
 
 
 #function_execution.log
